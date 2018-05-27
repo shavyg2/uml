@@ -1,0 +1,8 @@
+
+
+
+
+class Label{
+    display:string
+    position:number
+}

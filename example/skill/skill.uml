@@ -1,0 +1,10 @@
+
+!include ../attribute/label.uml
+
+
+class Skill{
+    name:Label
+}
+
+
+Skill "has a" ---o "belongs to" Label

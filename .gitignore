@@ -3,8 +3,9 @@
 *.ts
 !*.d.ts
 *.png
-!example/**/*
 *.uml
+!example/*
+!example/**/*
 /test
 *.log
 *.lock

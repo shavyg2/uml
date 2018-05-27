@@ -1,0 +1,11 @@
+
+
+
+
+class Person{
+    - firstName:string
+    - lastName:string
+    - age:number
+
+    + getName():string
+}

@@ -1,0 +1,13 @@
+
+
+!include example/skill/skill.uml
+!include example/person.uml
+
+class Soldier {
+    skills:Skill[]
+}
+
+
+Person <|-- Soldier
+Soldier --o Skill
+
