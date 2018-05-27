@@ -27,7 +27,17 @@
     "uml": "bin/index.js"
   },
   "directories": {
+    "example": "example",
     "test": "test"
   },
-  "description": "Generate uml diagrams, that can include and use other files"
+  "description": "Generate uml diagrams, that can include and use other files",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shavyg2/uml.git"
+  },
+  "bugs": {
+    "url": "https://github.com/shavyg2/uml/issues"
+  },
+  "homepage": "https://github.com/shavyg2/uml#readme"
 }
