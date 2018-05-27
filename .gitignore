@@ -3,6 +3,7 @@
 *.ts
 !*.d.ts
 *.png
+!example/*
 *.uml
 /test
 *.log
