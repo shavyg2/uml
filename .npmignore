@@ -1,0 +1,9 @@
+*.ts
+!*.d.ts
+*.uml
+*.png
+*.log
+*.lock
+*.spec.*
+*.map
+
