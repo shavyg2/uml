@@ -24,6 +24,7 @@ var Queue = /** @class */ (function () {
         get: function () {
             if (this.stack.length === 0) {
                 this.stack.push(Promise.resolve());
+                return this.stack[0];
             }
             else {
                 if (this.robin >= this.stack.length) {
@@ -49,7 +50,9 @@ var Queue = /** @class */ (function () {
     });
     Queue.prototype.push = function (async_function) {
         var stack = this.plate;
-        var current = stack.then(function () { async_function(); });
+        var current = stack.then(function () {
+            return async_function();
+        });
         this.stack[this.last] = current;
     };
     return Queue;

@@ -44,13 +44,17 @@ var LiveFile_1 = require("../src/File/LiveFile");
 var chokidar_1 = __importDefault(require("chokidar"));
 var glob_1 = __importDefault(require("glob"));
 var util_1 = require("util");
+var os_1 = __importDefault(require("os"));
 Main();
 function Main() {
     return __awaiter(this, void 0, void 0, function () {
-        var app, watch, args;
+        var app, watch, args, concurrent;
         return __generator(this, function (_a) {
             app = new Argument_1.Application(process.argv.slice(2)).minimalist;
             watch = app.watch, args = app.args;
+            concurrent = Math.max(1, Math.floor(os_1.default.cpus().length * 3 / 4));
+            LiveFile_1.UMLFile.queue_size = concurrent;
+            console.log("Concurrency", concurrent);
             if (watch) {
                 console.log("watch application");
                 Watch(args);

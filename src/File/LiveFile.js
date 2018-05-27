@@ -56,6 +56,7 @@ var autobind_decorator_1 = __importDefault(require("autobind-decorator"));
 var glob_1 = __importDefault(require("glob"));
 var util_1 = require("util");
 var Queue_1 = require("../Queue");
+var path_1 = __importDefault(require("path"));
 var UMLFile = /** @class */ (function () {
     function UMLFile() {
     }
@@ -142,11 +143,20 @@ var UMLFile = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 this.queue.push(function () {
-                    var from = node_plantuml_1.default.generate(file).out;
-                    var to = fs_1.createWriteStream(replace_ext_1.default(file, ".png"));
-                    from.pipe(to);
+                    var options = {
+                        include: path_1.default.dirname(file)
+                    };
                     return new Promise(function (r, j) {
-                        to.once("end", r);
+                        var from = node_plantuml_1.default.generate(file, options).out;
+                        var to = fs_1.createWriteStream(replace_ext_1.default(file, ".png"));
+                        to.once("open", function () {
+                            console.log("Compiling:", file);
+                        });
+                        to.once("close", function () {
+                            console.log("Generated:", file);
+                            r();
+                        });
+                        from.pipe(to);
                     });
                 });
                 return [2 /*return*/];
@@ -160,5 +170,4 @@ var UMLFile = /** @class */ (function () {
     return UMLFile;
 }());
 exports.UMLFile = UMLFile;
-UMLFile.queue_size = 1;
 //# sourceMappingURL=LiveFile.js.map
