@@ -1,0 +1,12 @@
+
+
+!include test/resource/mitochondria.uml
+
+class Cell{
+    boolean alive
+
+
+}
+
+
+Cell --o Mitochondria

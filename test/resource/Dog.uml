@@ -1,0 +1,9 @@
+
+
+!include test/resource/Animal.uml
+class Dog{
+    boolean collar
+}
+
+
+Dog --|>Animal

@@ -1,0 +1,9 @@
+
+!include test/resource/cell.uml
+
+class Organism {
+    string name
+    int age
+}
+
+Organism --o Cell

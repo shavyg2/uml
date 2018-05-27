@@ -1,0 +1,8 @@
+
+!include test/resource/Organism.uml
+class Animal{
+
+}
+
+Organism <|--Animal
+

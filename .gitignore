@@ -1,11 +1,11 @@
 /node_modules
 .DS_Store
-*.ts
-!*.d.ts
+*.d.ts
 *.png
-*.uml
-!example/*
-!example/**/*
-/test
+*.js
+**/*.js
+*.map
+
+
 *.log
 *.lock
