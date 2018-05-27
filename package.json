@@ -12,13 +12,11 @@
     "chokidar": "^2.0.3",
     "glob": "^7.1.2",
     "memoizee-decorator": "^1.0.3",
-    "minimalist": "^1.0.0",
     "minimist": "^1.2.0",
     "node-plantuml": "^0.6.2",
     "replace-ext": "^1.0.0",
     "rxjs": "^6.2.0",
-    "rxjs-compat": "^6.2.0",
-    "uuid": "^3.2.1"
+    "rxjs-compat": "^6.2.0"
   },
   "devDependencies": {
     "@types/glob": "^5.0.35",
