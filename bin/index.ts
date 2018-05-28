@@ -6,14 +6,15 @@ import chokidar from "chokidar";
 import glob from "glob";
 import { promisify } from "util";
 import os from "os";
-
+import {debounceTime} from "rxjs/operators"
+import path from "path";
 
 Main()
 async function Main(){
     let app = new Application(process.argv.slice(2)).minimalist;
     let {watch,args} = app;
 
-    let concurrent = Math.max(1,Math.floor(os.cpus().length * 3 / 4))
+    let concurrent = Math.max(1,Math.floor(os.cpus().length * 4 / 4))
     UMLFile.queue_size = concurrent;
 
     console.log("Concurrency",concurrent)
@@ -29,19 +30,23 @@ async function Main(){
 }
 
 
-
 function Watch(args:string[]){
-    let watcher = chokidar.watch(args,{
+    
+    let parameter = args.length===1?args[0]:args
+    let watcher = chokidar.watch(parameter,{
         ignoreInitial:false
     });
-
+    
     watcher.on("add",async (file)=>{
-       let o = await UMLFile.Watch(file)
-       o.forEach(o=>{
-           o.subscribe(file=>{
-               UMLFile.Compile(file)
-           })
-       })
+        file = path.resolve(file);
+        
+
+
+        let o = await UMLFile.Watch(file)
+      
+        o.subscribe(file=>{
+            UMLFile.Compile(path.resolve(file))
+        })
     })
 }
 

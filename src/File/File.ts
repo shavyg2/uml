@@ -1,7 +1,7 @@
 import { FileContent } from "./FileContent";
 import uuid from "uuid/v4";
 import memoizee from "memoizee-decorator"
-
+import path from "path";
 
 
 export class File{
@@ -29,7 +29,7 @@ export class File{
         .filter((line)=>{
             return line.match(/^!include/)
         }).map((line)=>{
-            return line.split(" ").splice(1).join(" ")
+            return path.join(path.dirname(this.file_path),line.split(" ").splice(1).join(" "))
         })
     }
 
