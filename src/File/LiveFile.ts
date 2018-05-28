@@ -81,7 +81,7 @@ export class UMLFile{
 
         
         let fileDeleted = this.getDeleteEvent()
-        let fileChange = this.getChangeEvent(file_path).pipe(debounceTime(1000),mapTo(file_path));
+        let fileChange = this.getChangeEvent(file_path).pipe(mapTo(file_path));
 
         let children = from(this.ListenToChildren(file_path)).pipe(mergeAll())
 
@@ -95,9 +95,9 @@ export class UMLFile{
         
         
         let final =  merge(fileChange.pipe(tap(file=>{
-            console.log("from file",file)
+            //console.log("from file",file)
         })),/*parent,*/children.pipe(tap(file=>{
-            console.log("from children",file,"to",file_path)
+            //console.log("from children",file,"to",file_path)
         }),mapTo(file_path)))
 
         return  final;
