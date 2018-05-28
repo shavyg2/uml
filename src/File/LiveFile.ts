@@ -1,7 +1,7 @@
 import { UMLProcessor } from "../UMLProcessor";
 import { File } from "./File";
 import {fromEvent, from,of, Observable,Subject, interval,fromEventPattern} from "rxjs"
-import {takeUntil,mapTo,tap, mergeMap, switchMap, mergeAll, map, take, debounceTime, publish, skipUntil, filter, share, switchMapTo} from "rxjs/operators"
+import {takeUntil,mapTo,tap, mergeMap, switchMap, mergeAll, map, take, debounceTime, publish, skipUntil, filter, share, switchMapTo, auditTime, throttleTime, audit} from "rxjs/operators"
 import {merge} from "rxjs"
 import chokidar from "chokidar";
 import { watch, createWriteStream, fstat } from "fs";
@@ -20,9 +20,10 @@ import fs from "fs";
 import path from "path";
 
 
-        
-let file_count = new Map()
+let time = [0]
+
 let streams = new Map();
+let lastTime=500;
 export class UMLFile{
 
     @memoizee
@@ -35,7 +36,22 @@ export class UMLFile{
     @memoizee
     private static getChangeEvent(file_path){
         let watcher = fs.watch(file_path)
-        return fromEvent(watcher as any,"change").pipe(share())
+        return fromEvent(watcher as any,"change").pipe(tap(x=>{
+            time.push(Date.now());
+
+            let [start,end] = time.slice(-2)
+
+           let diff=end-start;
+
+           let max = Math.min(100,diff)
+           let min = Math.max(30,max)
+
+           lastTime= min;
+           
+            
+        }),share(),audit(value=>{
+            return interval(lastTime).pipe(take(1))
+        }))
 
     }
 
@@ -55,17 +71,13 @@ export class UMLFile{
 
         let result = (()=>{
 
-                try{
-                    let children = files.map(file=>{
-                        //console.log(`${file_path.replace(process.cwd(),"")}--> ${file.replace(process.cwd(),"")}`)
-                        return this.Watch(file)
+            try{
+                let children = files.map(file=>{
+                    return this.Watch(file)
                 })
-                
-                
                 return merge(...children)
             }catch(e){
                 return of<string>()
-                
             }
         })().pipe(takeUntil(fileChange));
 
