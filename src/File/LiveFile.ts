@@ -69,38 +69,13 @@ export class UMLFile{
             }
         })().pipe(takeUntil(fileChange));
 
-        // let change = fileChange.pipe(switchMap((...args)=>{
-
-        //     console.log(args);
-
-        //     let next = from(this.ListenToChildren(file_path)).pipe(mergeAll())
-        //     return next//merge(of(file_path),next);
-        // }))
-
-
         let change = fileChange.pipe(mergeMap(_=>{
-
             let reset = from(this.ListenToChildren(file_path)).pipe(mergeAll(),takeUntil(fileChange))
-
             return reset;
         }))
 
-
-        
-
-
-
-
         return merge(result,change);
-
-        
     }
-
-
-   
-
-
-    
 
     private static _Watch(file_path:string){
 
@@ -108,17 +83,14 @@ export class UMLFile{
         let fileDeleted = this.getDeleteEvent()
         let fileChange = this.getChangeEvent(file_path).pipe(debounceTime(1000),mapTo(file_path));
 
-
         let children = from(this.ListenToChildren(file_path)).pipe(mergeAll())
 
-
-    
-        
-        let parent = fileChange.pipe(switchMap(()=>{
-            console.log("need to refresh children")
-            let redo = from(this.ListenToChildren(file_path)).pipe(mergeAll())
-            return redo
-        })).pipe(takeUntil(fileDeleted))
+        //TODO: Remove if not needed
+        // let parent = fileChange.pipe(switchMap(()=>{
+        //     console.log("need to refresh children")
+        //     let redo = from(this.ListenToChildren(file_path)).pipe(mergeAll())
+        //     return redo
+        // })).pipe(takeUntil(fileDeleted))
 
         
         
