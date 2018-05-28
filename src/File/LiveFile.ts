@@ -4,7 +4,7 @@ import {fromEvent, from,of, Observable,Subject, interval,fromEventPattern} from 
 import {takeUntil,mapTo,tap, mergeMap, switchMap, mergeAll, map, take, debounceTime, publish, skipUntil, filter, share, switchMapTo} from "rxjs/operators"
 import {merge} from "rxjs"
 import chokidar from "chokidar";
-import { watch, createWriteStream } from "fs";
+import { watch, createWriteStream, fstat } from "fs";
 import memoizee from "memoizee-decorator"
 import { Watcher } from "./Watcher";
 import { FilePattern } from "./FilePattern";
@@ -15,10 +15,11 @@ import bind from "autobind-decorator"
 import glob from "glob";
 import { callbackify, promisify } from "util";
 import { Queue } from "../Queue";
+import fs from "fs";
 
 import path from "path";
 
-let store={} as any;
+
         
 let file_count = new Map()
 let streams = new Map();
@@ -31,11 +32,11 @@ export class UMLFile{
 
     }
 
+    @memoizee
     private static getChangeEvent(file_path){
-        return this.getChange()
-        .pipe(filter((file)=>{
-            return path.resolve(file_path)!==path.resolve(file) 
-        }))
+        let watcher = fs.watch(file_path)
+        return fromEvent(watcher as any,"change").pipe(share())
+
     }
 
     @memoizee
@@ -52,30 +53,45 @@ export class UMLFile{
         let file = await File.Create(file_path);
         let files = file.getDependencies();
 
-        let result = (function(){
+        let result = (()=>{
 
                 try{
                     let children = files.map(file=>{
+                        //console.log(`${file_path.replace(process.cwd(),"")}--> ${file.replace(process.cwd(),"")}`)
                         return this.Watch(file)
                 })
                 
                 
-                return merge(...children).pipe(mapTo(file_path))
+                return merge(...children)
             }catch(e){
                 return of<string>()
                 
             }
         })().pipe(takeUntil(fileChange));
 
-        let change = fileChange.pipe(switchMap(()=>{
-            let next = from(this.ListenToChildren(file_path)).pipe(mergeAll())
-            return merge(of(file_path),next)
+        // let change = fileChange.pipe(switchMap((...args)=>{
+
+        //     console.log(args);
+
+        //     let next = from(this.ListenToChildren(file_path)).pipe(mergeAll())
+        //     return next//merge(of(file_path),next);
+        // }))
+
+
+        let change = fileChange.pipe(mergeMap(_=>{
+
+            let reset = from(this.ListenToChildren(file_path)).pipe(mergeAll(),takeUntil(fileChange))
+
+            return reset;
         }))
 
 
+        
 
 
-        return merge(result,change).pipe(mapTo(file_path));
+
+
+        return merge(result,change);
 
         
     }
@@ -88,42 +104,38 @@ export class UMLFile{
 
     private static _Watch(file_path:string){
 
-        Watcher.AddWatch(file_path);
+        
         let fileDeleted = this.getDeleteEvent()
-        let fileChange = this.getChangeEvent(file_path).pipe(debounceTime(1000),tap(file=>{
-            console.log("change",file);
-        }));
+        let fileChange = this.getChangeEvent(file_path).pipe(debounceTime(1000),mapTo(file_path));
 
 
-        let children = from(this.ListenToChildren(file_path)).pipe(mergeAll(),mapTo(file_path))
+        let children = from(this.ListenToChildren(file_path)).pipe(mergeAll())
 
 
     
         
         let parent = fileChange.pipe(switchMap(()=>{
+            console.log("need to refresh children")
             let redo = from(this.ListenToChildren(file_path)).pipe(mergeAll())
             return redo
         })).pipe(takeUntil(fileDeleted))
 
         
         
-        let final =  fileChange//,/*parent,children*/)
+        let final =  merge(fileChange.pipe(tap(file=>{
+            console.log("from file",file)
+        })),/*parent,*/children.pipe(tap(file=>{
+            console.log("from children",file,"to",file_path)
+        }),mapTo(file_path)))
 
-        return  final.pipe(tap(file_path=>{
-            let _file= path.resolve(file_path);
-        store[_file] = store[_file] || 0;
-        store[_file]++
-        console.log(_file,store[_file]);
-        }))
+        return  final;
     }
 
     @memoizee
     static Watch(file_path:string):Observable<string>{
         let file = path.resolve(file_path)
         let result = this._Watch(file);
-        let observable = result.pipe(tap(x=>{
-            console.log(x)
-        }))
+        let observable = result
         let final = observable.pipe(share());
         return final;
     }

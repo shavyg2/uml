@@ -8,6 +8,7 @@ import { promisify } from "util";
 import os from "os";
 import {debounceTime} from "rxjs/operators"
 import path from "path";
+import "source-map-support/register"
 
 Main()
 async function Main(){
@@ -39,13 +40,9 @@ function Watch(args:string[]){
     
     watcher.on("add",async (file)=>{
         file = path.resolve(file);
-        
-
-
         let o = await UMLFile.Watch(file)
-      
         o.subscribe(file=>{
-            UMLFile.Compile(path.resolve(file))
+            UMLFile.Compile(file)
         })
     })
 }
