@@ -144,8 +144,9 @@ export class UMLFile{
                     try{
                         previous.destroy();
                         
-                    }catch{
-                        console.log(previous)
+                    }catch(e){
+                        console.error("error destroying stream")
+                        console.dir(previous,{depth:2})
                         process.exit(1);
                     }
                 }
