@@ -1,5 +1,6 @@
 
 import fs from "fs";
+import { promisify } from "util";
 
 
 
@@ -15,14 +16,25 @@ export class FileContent{
     }
 
 
-    static async Create(file_path:string){
-        let content = await new Promise<string>((r,j)=>{
+    private static async isValidFile(file_path:string){
+        try{
+            let stat = await promisify(fs.stat)(file_path).catch((e)=>{throw e})
+            return !stat.isDirectory()
+        }catch{
+            console.log(`warning can't find file ${file_path}`)
+            return false;
+        }
+    }
 
-            fs.readFile(file_path,(err,content)=>{
-                if(err){j(err)}
-                else{r(content.toString())}
-            })
-        })
+
+    static async Create(file_path:string){
+        let content:string;
+        if(!await this.isValidFile(file_path)){
+            content = "";
+        }else{
+            content= await  promisify(fs.readFile)(file_path,"utf8")
+        }
+
 
         return new FileContent(content)
     }
