@@ -1,13 +1,13 @@
-import { FileContent } from "./FileContent";
+import { OldFileContent } from "./FileContent";
 import uuid from "uuid/v4";
 import memoizee from "memoizee-decorator"
 import path from "path";
 
 
-export class File{
+export class OldFile{
 
 
-    constructor(private file_path:string,private file_content:FileContent){
+    constructor(private file_path:string,private file_content:OldFileContent){
 
     }
 
@@ -39,11 +39,11 @@ export class File{
 
 
     static async Create(file_path:string){
-        let content = await FileContent.Create(file_path)
-        return new File(file_path,content)
+        let content = await OldFileContent.Create(file_path)
+        return new OldFile(file_path,content)
     }
 
     static CreateFromContent(content:string){
-        return new File("",new FileContent(content))
+        return new OldFile("",new OldFileContent(content))
     }
 }

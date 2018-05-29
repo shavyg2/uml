@@ -1,5 +1,5 @@
 import { UMLProcessor } from "../UMLProcessor";
-import { File } from "./File";
+import { OldFile } from "./File";
 import {fromEvent, from,of, Observable,Subject, interval,fromEventPattern} from "rxjs"
 import {takeUntil,mapTo,tap, mergeMap, switchMap, mergeAll, map, take, debounceTime, publish, skipUntil, filter, share, switchMapTo, auditTime, throttleTime, audit} from "rxjs/operators"
 import {merge} from "rxjs"
@@ -66,7 +66,7 @@ export class UMLFile{
         let fileChange = this.getChangeEvent(file_path);
         
         
-        let file = await File.Create(file_path);
+        let file = await OldFile.Create(file_path);
         let files = file.getDependencies();
 
         let result = (()=>{

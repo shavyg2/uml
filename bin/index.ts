@@ -9,6 +9,7 @@ import os from "os";
 import {debounceTime} from "rxjs/operators"
 import path from "path";
 import "source-map-support/register"
+import { Watch } from "../src/application/main";
 
 Main()
 async function Main(){
@@ -30,22 +31,6 @@ async function Main(){
     }
 }
 
-
-function Watch(args:string[]){
-    
-    let parameter = args.length===1?args[0]:args
-    let watcher = chokidar.watch(parameter,{
-        ignoreInitial:false
-    });
-    
-    watcher.on("add",async (file)=>{
-        file = path.resolve(file);
-        let o = await UMLFile.Watch(file)
-        o.subscribe(file=>{
-            UMLFile.Compile(file)
-        })
-    })
-}
 
 
 async function Match(args:string[]){

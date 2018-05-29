@@ -1,5 +1,5 @@
 import { FilePattern } from "./File/FilePattern";
-import { File } from "./File/File";
+import { OldFile } from "./File/File";
 import { FileDependency } from "./File/FileDependency";
 
 
@@ -14,19 +14,19 @@ export class UMLProcessor{
     async process(){
         let file_paths = await this.pattern.getFiles()
         let files = file_paths.map((file)=>{
-            return File.Create(file)
+            return OldFile.Create(file)
         })
         return this.processFiles(await Promise.all(files))
     }
 
 
-    protected processFiles(files:File[]){
+    protected processFiles(files:OldFile[]){
         return files.map((file)=>{
             return this.processFile(file)
         })
     }
 
-    protected processFile(file:File){
+    protected processFile(file:OldFile){
         return new FileDependency(file)
     }
 }

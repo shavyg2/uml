@@ -1,4 +1,4 @@
-import { File } from "./File";
+import { OldFile } from "./File";
 
 
 
@@ -26,7 +26,7 @@ Application --o UMLProcessor
 describe("File",()=>{
 
     it("should be able to get dependencies",()=>{
-        let file = File.CreateFromContent(content)
+        let file = OldFile.CreateFromContent(content)
         let children = file.getDependencies()
         expect(children[0]).toBe("uml/src/UMLprocessor.uml")
     })

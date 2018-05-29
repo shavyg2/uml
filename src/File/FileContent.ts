@@ -4,7 +4,7 @@ import { promisify } from "util";
 
 
 
-export class FileContent{
+export class OldFileContent{
 
     constructor(private content:string){
 
@@ -36,6 +36,6 @@ export class FileContent{
         }
 
 
-        return new FileContent(content)
+        return new OldFileContent(content)
     }
 }

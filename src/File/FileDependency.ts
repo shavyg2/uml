@@ -1,9 +1,9 @@
-import { File } from "./File";
+import { OldFile } from "./File";
 
 
 export class FileDependency{
 
-    constructor(private file:File){
+    constructor(private file:OldFile){
 
     }
 
@@ -12,7 +12,7 @@ export class FileDependency{
         let children = this.file.getDependencies()
 
         let filesP = children.map((file)=>{
-            return File.Create(file)
+            return OldFile.Create(file)
         })
 
 
