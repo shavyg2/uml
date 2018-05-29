@@ -1,0 +1,16 @@
+
+!include ./file.uml
+
+
+class FileSystem {
+
+    ..
+    constructor(private file_cache:FileCache)
+    ..
+
+
+    getFile(path:string):File
+
+}
+
+FileSystem --> File

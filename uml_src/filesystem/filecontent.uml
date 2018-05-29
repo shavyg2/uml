@@ -1,0 +1,9 @@
+
+
+
+
+class FileContent{
+
+    path:string
+    content:Promise<string>
+}

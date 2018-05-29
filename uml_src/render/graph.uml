@@ -1,0 +1,12 @@
+
+
+
+
+class graph{
+
+
+    # content:(string|File)[]
+
+    
+    addContent(line:File||string)
+}

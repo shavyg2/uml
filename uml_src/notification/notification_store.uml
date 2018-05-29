@@ -1,0 +1,8 @@
+
+class Notification{
+
+    received(receiver:any)
+    isNotitified(receiver:any)
+
+    {static} createNotification():Notification
+}

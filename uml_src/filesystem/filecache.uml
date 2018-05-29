@@ -1,0 +1,16 @@
+
+
+
+!include ./filecontent.uml
+
+
+class FileCache{
+
+    - storage:[]
+
+    async readFile(path:string):FileContent
+
+}
+
+
+FileCache --> FileContent

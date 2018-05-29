@@ -1,0 +1,14 @@
+
+!include ../notification/notification_store.uml
+
+class FileNotification {
+
+
+    ---
+    constructor(onNotification:Function)
+    ---
+
+
+    Notify(file:File,notification:Notification)
+
+}

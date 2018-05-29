@@ -1,0 +1,13 @@
+
+
+
+
+
+class Pipeline{
+
+
+
+    async render(file:File):string
+
+    
+}

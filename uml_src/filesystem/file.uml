@@ -1,0 +1,18 @@
+
+!include ./filesystem.uml
+
+
+class File{
+
+    constructor(private filecache:FileCache):File
+    
+    - path:string
+
+    + getPath():string
+    + async getContent():string
+    
+    + async isAvailable():boolean
+
+    + async isStale(hash:string):boolean
+
+}

@@ -1,0 +1,14 @@
+
+
+
+
+class Dependency{
+
+
+    onNotify(action:function)
+
+
+    notify(file:File,notification:Notification)
+    
+
+}
